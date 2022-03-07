@@ -84,6 +84,20 @@ class _PelangganFormState extends State<PelangganForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Form Pelanggan'),
+        actions: [aksiSimpan()],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(children: [
+          txtInputID(),
+          txtInputNama(),
+          dropDownGender(),
+          txtInputTglLahir()
+        ]),
+      ),
+    );
   }
 }
