@@ -24,23 +24,37 @@ class _PelangganListState extends State<PelangganList> {
   }
 
   Widget item(Map d) => ListTile(
-        // onLongPress: (() {
-        //   showMenu(
-        //     context: context,
-        //     position: RelativeRect.fromLTRB(100, MediaQuery.of(context).size.height / 2, 100, 0),
-        //     items: [
-        //       PopupMenuItem(child: Text('Sunting data Ini'))
-        //     ]
-        //     );
-        // },
+        onLongPress: (() {
+          showMenu(
+              context: context,
+              position: RelativeRect.fromLTRB(
+                  100, MediaQuery.of(context).size.height / 2, 100, 0),
+              items: [
+                const PopupMenuItem(
+                  child: Text('Sunting data Ini'),
+                  value: 'S',
+                )
+              ]).then((value) {
+            if (value == 'S') {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (c) => PelangganForm(
+                            data: d,
+                          ))).then((value) {
+                if (value == true) refresh();
+              });
+            }
+          });
+        }),
         title: Text('${d['nama']}'),
         trailing: Text('${d['gender']}'),
         subtitle: Text('${d['tgl_lahir']}'),
       );
   Widget tombolTambah() => ElevatedButton(
         onPressed: () {
-          Navigator.push(context,
-                  MaterialPageRoute(builder: (c) => const PelangganForm()))
+          Navigator.push(
+                  context, MaterialPageRoute(builder: (c) => PelangganForm()))
               .then((value) {
             if (value == true) {
               refresh();

@@ -3,24 +3,28 @@ import 'package:fluttersqlite/helper/dbhelper.dart';
 import 'package:intl/intl.dart';
 
 class PelangganForm extends StatefulWidget {
-  const PelangganForm({Key? key}) : super(key: key);
+  final Map? data;
+  PelangganForm({Key? key, this.data}) : super(key: key);
 
   @override
-  State<PelangganForm> createState() => _PelangganFormState();
+  State<PelangganForm> createState() => _PelangganFormState(this.data);
 }
 
 class _PelangganFormState extends State<PelangganForm> {
-  //final Map? data;
+  final Map? data;
   late TextEditingController txtName, txtID, txtTglLahir;
   String gender = '';
 
-  _PelangganFormState() {
-    txtID = TextEditingController();
-    txtName = TextEditingController();
-    txtTglLahir = TextEditingController();
-    //gender = this.data?['gender'] ?? '';
+  _PelangganFormState(this.data) {
+    txtID = TextEditingController(text: '${this.data?['id'] ?? ''}');
+    txtName = TextEditingController(text: '${this.data?['nama'] ?? ''}');
+    txtTglLahir =
+        TextEditingController(text: '${this.data?['tgl_lahir'] ?? ''}');
+    gender = this.data?['gender'] ?? '';
 
-    lastID().then((value) => {txtID.text = '${value + 1}'});
+    if (this.data == null) {
+      lastID().then((value) => {txtID.text = '${value + 1}'});
+    }
   }
 
   Widget txtInputID() => TextFormField(
@@ -133,12 +137,10 @@ class _PelangganFormState extends State<PelangganForm> {
         'tgl_lahir': txtTglLahir.value.text
       };
 
-      // final id = this.data == null
-      //     ? await _db?.insert('pelanggan', data)
-      //     : await _db?.update('pelanggan', data,
-      //         where: 'id=?', whereArgs: [this.data?['id']]);
-
-      final id = await _db?.insert('pelanggan', data);
+      final id = this.data == null
+          ? await _db?.insert('pelanggan', data)
+          : await _db?.update('pelanggan', data,
+              where: 'id=?', whereArgs: [this.data?['id']]);
       return id! > 0;
     } catch (e) {
       return false;
