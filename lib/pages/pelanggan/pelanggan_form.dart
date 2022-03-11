@@ -82,8 +82,8 @@ class _PelangganFormState extends State<PelangganForm> {
 
   Widget aksiSimpan() => TextButton(
       onPressed: () {
-        simpanData().then((value) {
-          var pesan = value == true ? 'Sukses Simpan' : 'Gagal Simpan';
+        simpanData().then((h) {
+          var pesan = h == true ? 'Sukses Simpan' : 'Gagal Simpan';
 
           showDialog(
               context: context,
@@ -97,7 +97,9 @@ class _PelangganFormState extends State<PelangganForm> {
                           },
                           child: const Text('Oke')),
                     ],
-                  ));
+                  )).then((value) {
+            Navigator.pop(context, h);
+          });
           // .then((value) => Navigator.pop(context));
         });
       },

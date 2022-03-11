@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttersqlite/helper/dbhelper.dart';
+import 'package:fluttersqlite/pages/pelanggan/pelanggan_form.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class PelangganList extends StatefulWidget {
@@ -10,7 +11,7 @@ class PelangganList extends StatefulWidget {
 }
 
 class _PelangganListState extends State<PelangganList> {
-  RefreshController _refreshController =
+  final RefreshController _refreshController =
       RefreshController(initialRefresh: true);
   List lisData = [];
 
@@ -36,11 +37,23 @@ class _PelangganListState extends State<PelangganList> {
         trailing: Text('${d['gender']}'),
         subtitle: Text('${d['tgl_lahir']}'),
       );
+  Widget tombolTambah() => ElevatedButton(
+        onPressed: () {
+          Navigator.push(context,
+                  MaterialPageRoute(builder: (c) => const PelangganForm()))
+              .then((value) {
+            if (value == true) {
+              refresh();
+            }
+          });
+        },
+        child: const Text("Tambah Pelanggan"),
+      );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Data Pelanggan')),
+      appBar: AppBar(title: const Text('Data Pelanggan')),
       body: SmartRefresher(
         controller: _refreshController,
         onRefresh: () => refresh(),
@@ -48,6 +61,7 @@ class _PelangganListState extends State<PelangganList> {
           children: [for (Map d in lisData) item(d)],
         ),
       ),
+      floatingActionButton: tombolTambah(),
     );
   }
 }
