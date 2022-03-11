@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttersqlite/helper/dbhelper.dart';
+import 'package:fluttersqlite/pages/pelanggan/pelanggan_cari.dart';
 import 'package:fluttersqlite/pages/pelanggan/pelanggan_form.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -141,7 +142,17 @@ class _PelangganListState extends State<PelangganList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Data Pelanggan')),
+      appBar: AppBar(
+        title: const Text('Data Pelanggan'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (c) => const PelangganCari()));
+              },
+              icon: Icon(Icons.search))
+        ],
+      ),
       body: SmartRefresher(
         controller: _refreshController,
         onRefresh: () => refresh(),
