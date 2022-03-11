@@ -72,6 +72,51 @@ class _PelangganListState extends State<PelangganList> {
         title: Text('${d['nama']}'),
         trailing: Text('${d['gender']}'),
         subtitle: Text('${d['tgl_lahir']}'),
+        leading: PopupMenuButton(
+          itemBuilder: (bc) => [
+            PopupMenuItem(
+              child: Text('Sunting Data Ini'),
+              value: 'S',
+            ),
+            PopupMenuItem(
+              child: Text('Hapus Data Ini'),
+              value: 'H',
+            ),
+          ],
+          onSelected: (value) {
+            if (value == 'S') {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (c) => PelangganForm(
+                            data: d,
+                          ))).then((value) {
+                if (value == true) refresh();
+              });
+            } else if (value == 'H') {
+              showDialog(
+                  context: context,
+                  builder: (c) => AlertDialog(
+                        content: Text('Pelanggan ${d['nama']} ingin dihapus?'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                hapusData(d['id']).then((value) {
+                                  if (value == true) refresh();
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Ya, Saya Yakin Sekali')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Tidak Jadi Hapus"))
+                        ],
+                      ));
+            }
+          },
+        ),
       );
   Future<bool> hapusData(int id) async {
     final _db = await DBHelper.db();
