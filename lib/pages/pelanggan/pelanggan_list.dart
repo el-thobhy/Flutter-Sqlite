@@ -33,7 +33,8 @@ class _PelangganListState extends State<PelangganList> {
                 const PopupMenuItem(
                   child: Text('Sunting data Ini'),
                   value: 'S',
-                )
+                ),
+                const PopupMenuItem(child: Text('Hapus Data Ini'), value: 'H')
               ]).then((value) {
             if (value == 'S') {
               Navigator.push(
@@ -44,6 +45,27 @@ class _PelangganListState extends State<PelangganList> {
                           ))).then((value) {
                 if (value == true) refresh();
               });
+            } else if (value == 'H') {
+              showDialog(
+                  context: context,
+                  builder: (c) => AlertDialog(
+                        content: Text('Pelanggan ${d['nama']} ingin dihapus?'),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                hapusData(d['id']).then((value) {
+                                  if (value == true) refresh();
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Ya, Saya Yakin Sekali')),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text("Tidak Jadi Hapus"))
+                        ],
+                      ));
             }
           });
         }),
@@ -51,6 +73,13 @@ class _PelangganListState extends State<PelangganList> {
         trailing: Text('${d['gender']}'),
         subtitle: Text('${d['tgl_lahir']}'),
       );
+  Future<bool> hapusData(int id) async {
+    final _db = await DBHelper.db();
+    final count =
+        await _db?.delete('pelanggan', where: 'id=?', whereArgs: [id]);
+    return count! > 0;
+  }
+
   Widget tombolTambah() => ElevatedButton(
         onPressed: () {
           Navigator.push(
